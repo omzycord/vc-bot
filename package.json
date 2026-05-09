@@ -1,19 +1,13 @@
 {
-  "name": "vc-botd",
+  "name": "vc-bot",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
-  "start": "node index.js"
-}
+    "start": "node index.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
   "dependencies": {
-    "@discordjs/voice": "^0.19.2",
-    "discord.js": "^14.26.4",
-    "dotenv": "^17.4.2"
+    "@discordjs/voice": "^0.19.0",
+    "discord.js": "^14.21.0",
+    "dotenv": "^17.2.0"
   }
 }
