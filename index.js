@@ -1,7 +1,10 @@
 require("dotenv").config();
 
-const { Client, GatewayIntentBits, ChannelType } = require("discord.js");
-const { joinVoiceChannel, VoiceConnectionStatus } = require("@discordjs/voice");
+const { Client, GatewayIntentBits } = require("discord.js");
+const {
+  joinVoiceChannel,
+  VoiceConnectionStatus,
+} = require("@discordjs/voice");
 
 const client = new Client({
   intents: [
@@ -19,10 +22,6 @@ async function joinVC() {
     if (!channel) return console.log("Voice channel not found.");
 
     console.log("Channel found:", channel.name, channel.type);
-
-    if (channel.type !== ChannelType.GuildVoice) {
-      return console.log("That ID is not a normal voice channel.");
-    }
 
     const connection = joinVoiceChannel({
       channelId: channel.id,
@@ -49,6 +48,7 @@ client.once("ready", () => {
   console.log(`Logged in as ${client.user.tag}`);
   console.log("GUILD_ID:", process.env.GUILD_ID);
   console.log("VOICE_CHANNEL_ID:", process.env.VOICE_CHANNEL_ID);
+
   joinVC();
 });
 
