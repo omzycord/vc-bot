@@ -40,7 +40,9 @@ function joinVC() {
 
 client.once("ready", () => {
   console.log(`Logged in as ${client.user.tag}`);
+  console.log("GUILD_ID:", process.env.GUILD_ID);
+  console.log("VOICE_CHANNEL_ID:", process.env.VOICE_CHANNEL_ID);
   joinVC();
-});
+});});
 
 client.login(process.env.TOKEN); 
