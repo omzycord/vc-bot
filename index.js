@@ -1,10 +1,7 @@
 require("dotenv").config();
 
 const { Client, GatewayIntentBits } = require("discord.js");
-const {
-  joinVoiceChannel,
-  VoiceConnectionStatus,
-} = require("@discordjs/voice");
+const { joinVoiceChannel, VoiceConnectionStatus } = require("@discordjs/voice");
 
 const client = new Client({
   intents: [
@@ -43,6 +40,6 @@ client.once("ready", () => {
   console.log("GUILD_ID:", process.env.GUILD_ID);
   console.log("VOICE_CHANNEL_ID:", process.env.VOICE_CHANNEL_ID);
   joinVC();
-});});
+});
 
-client.login(process.env.TOKEN); 
+client.login(process.env.TOKEN);
