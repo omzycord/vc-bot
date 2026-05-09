@@ -3,7 +3,6 @@ require("dotenv").config();
 const { Client, GatewayIntentBits } = require("discord.js");
 const {
   joinVoiceChannel,
-  VoiceConnectionStatus,
 } = require("@discordjs/voice");
 
 const client = new Client({
@@ -16,10 +15,7 @@ const client = new Client({
 async function joinVC() {
   try {
     const guild = await client.guilds.fetch(process.env.GUILD_ID);
-    if (!guild) return console.log("Guild not found.");
-
     const channel = await client.channels.fetch(process.env.VOICE_CHANNEL_ID);
-    if (!channel) return console.log("Voice channel not found.");
 
     console.log("Channel found:", channel.name, channel.type);
 
@@ -27,18 +23,16 @@ async function joinVC() {
       channelId: channel.id,
       guildId: guild.id,
       adapterCreator: guild.voiceAdapterCreator,
-      selfMute: true,
+      selfMute: false,
       selfDeaf: false,
     });
 
-    connection.on(VoiceConnectionStatus.Ready, () => {
-      console.log("Bot joined the VC.");
+    console.log("Attempted to join VC");
+
+    connection.on("stateChange", (oldState, newState) => {
+      console.log(`Connection changed from ${oldState.status} to ${newState.status}`);
     });
 
-    connection.on(VoiceConnectionStatus.Disconnected, () => {
-      console.log("Bot disconnected. Rejoining in 5 seconds...");
-      setTimeout(joinVC, 5000);
-    });
   } catch (err) {
     console.error("Join error:", err);
   }
