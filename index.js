@@ -1,6 +1,6 @@
 require("dotenv").config();
 
-const { Client, GatewayIntentBits } = require("discord.js");
+const { Client, GatewayIntentBits, ChannelType } = require("discord.js");
 const { joinVoiceChannel, VoiceConnectionStatus } = require("@discordjs/voice");
 
 const client = new Client({
@@ -10,29 +10,39 @@ const client = new Client({
   ],
 });
 
-function joinVC() {
-  const guild = client.guilds.cache.get(process.env.GUILD_ID);
-  if (!guild) return console.log("Guild not found.");
+async function joinVC() {
+  try {
+    const guild = await client.guilds.fetch(process.env.GUILD_ID);
+    if (!guild) return console.log("Guild not found.");
 
-  const channel = guild.channels.cache.get(process.env.VOICE_CHANNEL_ID);
-  if (!channel) return console.log("Voice channel not found.");
+    const channel = await client.channels.fetch(process.env.VOICE_CHANNEL_ID);
+    if (!channel) return console.log("Voice channel not found.");
 
-  const connection = joinVoiceChannel({
-    channelId: channel.id,
-    guildId: guild.id,
-    adapterCreator: guild.voiceAdapterCreator,
-    selfMute: true,
-    selfDeaf: false,
-  });
+    console.log("Channel found:", channel.name, channel.type);
 
-  connection.on(VoiceConnectionStatus.Ready, () => {
-    console.log("Bot joined the VC.");
-  });
+    if (channel.type !== ChannelType.GuildVoice) {
+      return console.log("That ID is not a normal voice channel.");
+    }
 
-  connection.on(VoiceConnectionStatus.Disconnected, () => {
-    console.log("Bot disconnected. Rejoining in 5 seconds...");
-    setTimeout(joinVC, 5000);
-  });
+    const connection = joinVoiceChannel({
+      channelId: channel.id,
+      guildId: guild.id,
+      adapterCreator: guild.voiceAdapterCreator,
+      selfMute: true,
+      selfDeaf: false,
+    });
+
+    connection.on(VoiceConnectionStatus.Ready, () => {
+      console.log("Bot joined the VC.");
+    });
+
+    connection.on(VoiceConnectionStatus.Disconnected, () => {
+      console.log("Bot disconnected. Rejoining in 5 seconds...");
+      setTimeout(joinVC, 5000);
+    });
+  } catch (err) {
+    console.error("Join error:", err);
+  }
 }
 
 client.once("ready", () => {
